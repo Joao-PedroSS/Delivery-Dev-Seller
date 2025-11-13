@@ -1,4 +1,5 @@
 import 'package:delivery_dev_seller/auth/ui/viewmodels/auth_viewmodel.dart';
+import 'package:delivery_dev_seller/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -55,43 +56,44 @@ class _AuthPageState extends State<AuthPage> {
         return Scaffold(
           backgroundColor: Colors.black,
           body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 60),
-                    Text(
-                      'Entregas DEV',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 513),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 60),
+                        const Text(
+                          'Entregas DEV',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 64,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 80),
+
+                        _buildEmailField(),
+                        const SizedBox(height: 24),
+
+                        _buildPasswordField(),
+                        const SizedBox(height: 40),
+
+                        _buildLoginButton(),
+                      ],
                     ),
-                    SizedBox(height: 80),
-
-                    _buildEmailField(),
-
-                    SizedBox(height: 24),
-
-                    _buildPasswordField(),
-
-                    SizedBox(height: 40),
-
-                    _buildLoginButton(),
-
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            )
+          )
         );
-      },
+      }
     );
   }
 
@@ -103,23 +105,23 @@ class _AuthPageState extends State<AuthPage> {
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: 'E-mail', //
-        labelStyle: TextStyle(color: Colors.grey[400]),
+        labelStyle: TextStyle(color: AppColors.text),
         hintText: 'ex: joao@email.com', //
-        hintStyle: TextStyle(color: Colors.grey[600]),
+        hintStyle: TextStyle(color: AppColors.text),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[800]!),
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColors.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.white),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.red),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.red),
         ),
       ),
@@ -143,9 +145,9 @@ class _AuthPageState extends State<AuthPage> {
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: 'Senha',
-        labelStyle: TextStyle(color: Colors.grey[400]),
+        labelStyle: TextStyle(color: AppColors.text),
         hintText: '******',
-        hintStyle: TextStyle(color: Colors.grey[600]),
+        hintStyle: TextStyle(color: AppColors.text),
         
         suffixIcon: IconButton(
           icon: Icon(
@@ -159,19 +161,19 @@ class _AuthPageState extends State<AuthPage> {
           },
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.grey[800]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.white),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.red),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(color: Colors.red),
         ),
       ),
@@ -190,10 +192,10 @@ class _AuthPageState extends State<AuthPage> {
       height: 50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[200], // Fundo claro
+          backgroundColor: AppColors.surface, // Fundo claro
           foregroundColor: Colors.black, // Texto escuro
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(100),
           ),
         ),
         
