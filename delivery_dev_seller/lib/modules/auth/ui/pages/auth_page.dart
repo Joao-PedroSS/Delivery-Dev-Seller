@@ -1,4 +1,4 @@
-import 'package:delivery_dev_seller/auth/ui/viewmodels/auth_viewmodel.dart';
+import 'package:delivery_dev_seller/modules/auth/ui/viewmodels/auth_viewmodel.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';

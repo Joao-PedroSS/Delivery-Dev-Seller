@@ -1,6 +1,6 @@
 import 'package:delivery_dev_seller/core/data/repositories/auth_repository.dart';
-import 'package:delivery_dev_seller/auth/ui/pages/auth_page.dart';
-import 'package:delivery_dev_seller/auth/ui/viewmodels/auth_viewmodel.dart';
+import 'package:delivery_dev_seller/modules/auth/ui/pages/auth_page.dart';
+import 'package:delivery_dev_seller/modules/auth/ui/viewmodels/auth_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AuthModule extends Module {

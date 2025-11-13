@@ -1,4 +1,4 @@
-import 'package:delivery_dev_seller/auth/auth_module.dart';
+import 'package:delivery_dev_seller/modules/auth/auth_module.dart';
 import 'package:delivery_dev_seller/core/data/repositories/auth_repository.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
