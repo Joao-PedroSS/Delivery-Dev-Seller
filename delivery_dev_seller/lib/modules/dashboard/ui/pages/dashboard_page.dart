@@ -1,27 +1,26 @@
+import 'package:delivery_dev_seller/modules/dashboard/data/models/delivery_dto.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/dashboard_viewmodel.dart';
+import 'package:delivery_dev_seller/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _DeliveryPageState();
+}
+
+class _DeliveryPageState extends State<DashboardPage> {
+  final _viewModel = Modular.get<DashboardViewmodel>();
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Dashboard DEV',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.white,
-        fontFamily: 'Roboto',
-        scaffoldBackgroundColor: const Color(0xFF212121),
-        cardColor: const Color(0xFF2D2D2D),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.white70),
-          headlineSmall:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          titleMedium:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
+      theme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       home: const DashboardScreen(),
     );
   }
@@ -50,7 +49,7 @@ class _Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 250,
-      color: const Color(0xFF1A1A1A),
+      color: Theme.of(context).primaryColor,
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,12 +63,9 @@ class _Sidebar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          const Text(
+          Text(
             'Menu principal',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-            ),
+            style: Theme.of(context).textTheme.labelSmall,
           ),
           const SizedBox(height: 16),
           _MenuItem(
@@ -109,6 +105,8 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
       decoration: BoxDecoration(
@@ -119,14 +117,14 @@ class _MenuItem extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: isSelected ? Colors.white : Colors.grey[400],
+            color: isSelected ? Colors.white : iconColor,
             size: 20,
           ),
           const SizedBox(width: 12),
           Text(
             text,
             style: TextStyle(
-              color: isSelected ? Colors.white : Colors.grey[400],
+              color: isSelected ? Colors.white : iconColor,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               fontSize: 14,
             ),
@@ -145,27 +143,23 @@ class _MainContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           const SizedBox(height: 24),
           _buildStatsCards(),
           const SizedBox(height: 24),
-          _buildOrdersSection(),
+          _buildOrdersSection(context),
         ],
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           'DASHBOARD',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         Container(
           padding: const EdgeInsets.all(4),
@@ -205,82 +199,48 @@ class _MainContent extends StatelessWidget {
     );
   }
 
-  Widget _buildOrdersSection() {
-    return Container(
-      padding: const EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2D2D2D),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Column(
-        children: [
-          const Text(
-            'PEDIDOS EM ANDAMENTO',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Wrap(
-            spacing: 16.0,
-            runSpacing: 16.0,
-            children: [
-              _OrderCard(
-                location: 'Local de entrega - Germânia',
-                status: 'João esta no processo de coleta',
-                distance: '12 km para o entregador chegar na loja',
-                address: 'Rua Professor Prudente, 518',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Avenida',
-                status: 'Pedro esta no processo de entrega',
-                distance: '12 km para o entregador chegar ao cliente',
-                address: 'Avenida, 120, apto. 2',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Germânia',
-                status: 'João esta no processo de coleta',
-                distance: '12 km para o entregador chegar na loja',
-                address: 'Rua Professor Prudente, 518',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Germânia',
-                status: 'João esta no processo de coleta',
-                distance: '12 km para o entregador chegar na loja',
-                address: 'Rua Professor Prudente, 518',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Avenida',
-                status: 'Pedro esta no processo de entrega',
-                distance: '12 km para o entregador chegar ao cliente',
-                address: 'Avenida, 120, apto. 2',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Germânia',
-                status: 'João esta no processo de coleta',
-                distance: '12 km para o entregador chegar na loja',
-                address: 'Rua Professor Prudente, 518',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Germânia',
-                status: 'João esta no processo de coleta',
-                distance: '12 km para o entregador chegar na loja',
-                address: 'Rua Professor Prudente, 518',
-              ),
-              _OrderCard(
-                location: 'Local de entrega - Avenida',
-                status: 'Pedro esta no processo de entrega',
-                distance: '12 km para o entregador chegar ao cliente',
-                address: 'Avenida, 120, apto. 2',
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+  Widget _buildOrdersSection(BuildContext context) {
+  final _viewModel = Modular.get<DashboardViewmodel>();
+
+  return Container(
+    padding: const EdgeInsets.all(24.0),
+    decoration: BoxDecoration(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(16.0),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'PEDIDOS EM ANDAMENTO',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 24),
+
+        AnimatedBuilder(
+          animation: _viewModel,
+          builder: (context, _) {
+            final orders = _viewModel.deliveries;
+
+            if (orders.isEmpty) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: orders
+                  .map((o) => _buildOrderCard(o))
+                  .toList(),
+            );
+          },
+        ),
+      ],
+    ),
+  );
+}
 }
 
 class _StatCard extends StatelessWidget {
@@ -314,11 +274,11 @@ class _StatCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(color: Colors.grey[300], fontSize: 14),
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
                   if (showDot)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6.0),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 6.0),
                       child: CircleAvatar(
                         backgroundColor: Colors.green,
                         radius: 4,
@@ -327,22 +287,31 @@ class _StatCard extends StatelessWidget {
                 ],
               ),
               if (icon != null)
-                Icon(icon, color: Colors.grey[400], size: 20),
+                Icon(
+                  icon,
+                  color: Theme.of(context).iconTheme.color,
+                  size: 20
+                ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             count,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ],
       ),
     );
   }
+}
+
+_OrderCard _buildOrderCard(DeliveryDto order) {
+  return _OrderCard(
+    location: order.customerAddressLabel,
+    status: order.status,
+    distance: '10',
+    address: order.customerAddressStreet
+  );
 }
 
 class _OrderCard extends StatelessWidget {
@@ -364,7 +333,7 @@ class _OrderCard extends StatelessWidget {
       width: 280,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF3B3B3B),
+        color: Theme.of(context).canvasColor,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
@@ -372,26 +341,22 @@ class _OrderCard extends StatelessWidget {
         children: [
           Text(
             location,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 12),
           Text(
             status,
-            style: TextStyle(color: Colors.grey[300], fontSize: 13),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 4),
           Text(
             distance,
-            style: TextStyle(color: Colors.grey[300], fontSize: 13),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 4),
           Text(
             address,
-            style: TextStyle(color: Colors.grey[300], fontSize: 13),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),

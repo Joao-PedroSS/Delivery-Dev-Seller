@@ -12,5 +12,5 @@ void main() {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(ModularApp(module: AppModule(), child: AppWidget(),));
+  runApp(ModularApp(module: AppModule(), child: AppWidget(), ));
 }
