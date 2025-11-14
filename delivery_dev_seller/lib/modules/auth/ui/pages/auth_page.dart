@@ -35,7 +35,7 @@ class _AuthPageState extends State<AuthPage> {
           _passwordController.text,
         );
 
-        Modular.to.navigate('/home/');
+        Modular.to.navigate('/dashboard/');
       } catch (e) {
 
         ScaffoldMessenger.of(context).showSnackBar(
