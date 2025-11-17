@@ -1,5 +1,7 @@
 import 'package:delivery_dev_seller/modules/dashboard/data/repositories/dashboard_repository.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/dashboard_page.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/pages/drivers_page.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/pages/solitations_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/dashboard_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -15,6 +17,8 @@ class DashboardModule extends Module {
   @override
   void routes(RouteManager r) {
     r.child('/', child: (_) => DashboardPage());
+    r.child('/solitations', child: (_) => SolitationsScreen());
+    r.child('/drivers', child: (_) => DriversScreen());
 
     super.routes(r);
   }

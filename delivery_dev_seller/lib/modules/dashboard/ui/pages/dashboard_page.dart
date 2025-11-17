@@ -1,5 +1,6 @@
 import 'package:delivery_dev_seller/modules/dashboard/data/models/delivery_dto.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/dashboard_viewmodel.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/sidebar.dart';
 import 'package:delivery_dev_seller/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -34,100 +35,9 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          _Sidebar(),
+          const Sidebar(currentPage: AppPages.dashboard),
           Expanded(
             child: _MainContent(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Sidebar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 250,
-      color: Theme.of(context).primaryColor,
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Entregas DEV',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Menu principal',
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-          const SizedBox(height: 16),
-          _MenuItem(
-            icon: Icons.dashboard_outlined,
-            text: 'DASHBOARD',
-            isSelected: true,
-          ),
-          _MenuItem(
-            icon: Icons.people_alt_outlined,
-            text: 'ENTREGADORES',
-          ),
-          _MenuItem(
-            icon: Icons.description_outlined,
-            text: 'Solicitações',
-          ),
-          const Spacer(),
-          _MenuItem(
-            icon: Icons.exit_to_app,
-            text: 'SAIR',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MenuItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final bool isSelected;
-
-  const _MenuItem({
-    required this.icon,
-    required this.text,
-    this.isSelected = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final iconColor = Theme.of(context).iconTheme.color;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.grey.withOpacity(0.2) : Colors.transparent,
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: isSelected ? Colors.white : iconColor,
-            size: 20,
-          ),
-          const SizedBox(width: 12),
-          Text(
-            text,
-            style: TextStyle(
-              color: isSelected ? Colors.white : iconColor,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              fontSize: 14,
-            ),
           ),
         ],
       ),

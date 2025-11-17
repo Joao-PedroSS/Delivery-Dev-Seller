@@ -21,6 +21,8 @@ class AppTheme {
       cardColor: AppColors.primary, 
       canvasColor: AppColors.secundary,
 
+      dividerColor: AppColors.borderColor,
+
       iconTheme: const IconThemeData(
         color: AppColors.surface,
         size: 20,
