@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-// Enum agora em inglês
 enum AppPages { dashboard, drivers, requests }
 
 class Sidebar extends StatelessWidget {
@@ -34,18 +34,19 @@ class Sidebar extends StatelessWidget {
           _MenuItem(
             icon: Icons.dashboard_outlined,
             text: 'DASHBOARD',
+            route: '/dashboard/',
             isSelected: currentPage == AppPages.dashboard,
           ),
           _MenuItem(
             icon: Icons.people_alt_outlined,
             text: 'ENTREGADORES',
-            // Atualizado para AppPages.drivers
+            route: '/dashboard/drivers',
             isSelected: currentPage == AppPages.drivers,
           ),
           _MenuItem(
             icon: Icons.description_outlined,
             text: 'Solicitações',
-            // Atualizado para AppPages.requests
+            route: '/dashboard/solitations',
             isSelected: currentPage == AppPages.requests,
           ),
           const Spacer(),
@@ -62,11 +63,13 @@ class Sidebar extends StatelessWidget {
 class _MenuItem extends StatelessWidget {
   final IconData icon;
   final String text;
+  final String? route;
   final bool isSelected;
 
   const _MenuItem({
     required this.icon,
     required this.text,
+    this.route,
     this.isSelected = false,
   });
 
@@ -88,14 +91,19 @@ class _MenuItem extends StatelessWidget {
             size: 20,
           ),
           const SizedBox(width: 12),
-          Text(
-            text,
-            style: TextStyle(
-              color: isSelected ? Colors.white : iconColor,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              fontSize: 14,
+          InkWell(
+            onTap: () {
+              route != null ? Modular.to.navigate(route!) : {};
+            },
+            child: Text(
+              text,
+              style: TextStyle(
+                color: isSelected ? Colors.white : iconColor,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 14,
+              ),
             ),
-          ),
+          )
         ],
       ),
     );

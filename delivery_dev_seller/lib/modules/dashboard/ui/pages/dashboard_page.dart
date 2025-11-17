@@ -13,7 +13,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DeliveryPageState extends State<DashboardPage> {
-  final _viewModel = Modular.get<DashboardViewmodel>();
   
   @override
   Widget build(BuildContext context) {
