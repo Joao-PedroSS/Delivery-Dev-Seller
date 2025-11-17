@@ -21,14 +21,12 @@ class _DeliveryPageState extends State<DashboardPage> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      home: const DashboardScreen(),
+      home: _DashboardScreen(),
     );
   }
 }
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
-
+class _DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +107,7 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildOrdersSection(BuildContext context) {
-  final _viewModel = Modular.get<DashboardViewmodel>();
+  final viewModel = Modular.get<DashboardViewmodel>();
 
   return Container(
     padding: const EdgeInsets.all(24.0),
@@ -127,9 +125,9 @@ class _MainContent extends StatelessWidget {
         const SizedBox(height: 24),
 
         AnimatedBuilder(
-          animation: _viewModel,
+          animation: viewModel,
           builder: (context, _) {
-            final orders = _viewModel.deliveries;
+            final orders = viewModel.deliveries;
 
             if (orders.isEmpty) {
               return const Center(
