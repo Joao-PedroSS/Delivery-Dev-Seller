@@ -1,5 +1,5 @@
 class DeliveryDto {
-  final String id;
+  final String? id;
   final String? idUser;
 
   final String restaurantName;
@@ -20,7 +20,7 @@ class DeliveryDto {
   final String? conclusionDate;
 
   DeliveryDto({
-    required this.id,
+    this.id,
     this.idUser,
 
     required this.restaurantName,
@@ -61,5 +61,25 @@ class DeliveryDto {
       status: map['status'],
       conclusionDate: map['conclusion_date'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      if (id != null) "id": id,
+      if (idUser != null) "id_user": idUser,
+
+      "restaurant_name": restaurantName,
+      "restaurant_lat": restaurantLat,
+      "restaurant_lon": restaurantLon,
+      "restaurant_address_label": restaurantAddressLabel,
+      "restaurant_address_street": restaurantAddressStreet,
+      "customer_address_label": customerAddressLabel,
+      "customer_address_street": customerAddressStreet,
+      "customer_lat": customerLat,
+      "customer_lon": customerLon,
+
+      if (distanceKm != null) "distance_km": distanceKm,
+      "price": price,
+    };
   }
 }
