@@ -1,4 +1,4 @@
-import 'package:delivery_dev_seller/modules/dashboard/data/repositories/dashboard_repository.dart';
+import 'package:delivery_dev_seller/modules/dashboard/data/repositories/delivery_repository.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/dashboard_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/drivers_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/solitations_page.dart';

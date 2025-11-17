@@ -1,5 +1,5 @@
 import 'package:delivery_dev_seller/modules/dashboard/data/models/delivery_dto.dart';
-import 'package:delivery_dev_seller/modules/dashboard/data/repositories/dashboard_repository.dart';
+import 'package:delivery_dev_seller/modules/dashboard/data/repositories/delivery_repository.dart';
 import 'package:flutter/material.dart';
 
 class DashboardViewmodel extends ChangeNotifier {
