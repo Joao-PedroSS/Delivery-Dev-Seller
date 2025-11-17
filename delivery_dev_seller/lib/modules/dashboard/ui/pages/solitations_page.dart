@@ -1,10 +1,29 @@
 import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/sidebar.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
+import 'package:delivery_dev_seller/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-class SolitationsScreen extends StatelessWidget {
-  const SolitationsScreen({super.key});
+class SolitationsPage extends StatefulWidget {
+  SolitationsPage({super.key});
 
+  @override
+  State<SolitationsPage> createState() => _SolitationsState();
+}
+
+class _SolitationsState extends State<SolitationsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Dashboard DEV',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
+      home: _SolitationsScreen(),
+    );
+  }
+}
+
+class _SolitationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

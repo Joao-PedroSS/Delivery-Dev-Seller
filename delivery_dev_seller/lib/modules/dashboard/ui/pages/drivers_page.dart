@@ -1,5 +1,6 @@
 import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/sidebar.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
+import 'package:delivery_dev_seller/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class _Driver {
@@ -32,9 +33,27 @@ final List<_Driver> _mockDrivers = [
   _Driver(nome: 'Elaine Ribeiro', localizacao: 'Rua Prudente', status: 'OFF'),
 ];
 
-class DriversScreen extends StatelessWidget {
-  const DriversScreen({super.key});
+class DriversPage extends StatefulWidget {
+  DriversPage({super.key});
 
+  @override
+  State<DriversPage> createState() => _DriversState();
+}
+
+class _DriversState extends State<DriversPage> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Dashboard DEV',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
+      home: _DriversScreen(),
+    );
+  }
+}
+
+class _DriversScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

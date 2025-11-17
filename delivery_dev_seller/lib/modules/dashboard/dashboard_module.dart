@@ -17,8 +17,8 @@ class DashboardModule extends Module {
   @override
   void routes(RouteManager r) {
     r.child('/', child: (_) => DashboardPage());
-    r.child('/solitations', child: (_) => SolitationsScreen());
-    r.child('/drivers', child: (_) => DriversScreen());
+    r.child('/solitations', child: (_) => SolitationsPage());
+    r.child('/drivers', child: (_) => DriversPage());
 
     super.routes(r);
   }
