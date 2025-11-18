@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:delivery_dev_seller/modules/dashboard/data/services/geocoding_service.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/solitations_viewmodel.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/map_picker_widget.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
 
 class OrderFormModal extends StatefulWidget {
 
@@ -19,6 +24,9 @@ class _OrderFormModalState extends State<OrderFormModal> {
   late TextEditingController _complementController;
 
   final _viewmodel = Modular.get<SolitationsViewmodel>();
+
+  double? _manualLat;
+  double? _manualLon;
 
   @override
   void initState() {
@@ -42,32 +50,120 @@ class _OrderFormModalState extends State<OrderFormModal> {
     }
 
     try {
-      final street = _locationController.text;
-      final number = _numberController.text;
-      final complement = _complementController.text;
-      
-      final String fullAddress = "$street, $number, Santa Cruz do Sul - RS";
+      final double customerLat;
+      final double customerLon;
 
-      final locationData = await GeocodingService().getCoordinatesFromAddress(fullAddress);
+      final String street;
+      final String number;
+      final String complement;
 
-      final double customerLat = locationData!.lat;
-      final double customerLon = locationData.lon;
+      if ([_manualLat, _manualLon].every((value) => value == null)) {
+        street = _locationController.text;
+        number = _numberController.text;
+        complement = _complementController.text;
+
+        final String fullAddress = "$street, $number, Santa Cruz do Sul - RS";
+
+        final locationData = await GeocodingService().getCoordinatesFromAddress(fullAddress);
+
+        customerLat = locationData!.lat;
+        customerLon = locationData.lon;
+
+      } else {
+        customerLat = _manualLat!;
+        customerLon = _manualLon!;
+
+        final addressMap = await _getAddressFromCoordinates(customerLat, customerLon);
+
+        street = addressMap!['road']!;
+        number = addressMap['house_number']!;
+        complement = addressMap['suburb']!;
+      }
 
       await _viewmodel.createSolitation(
-        customerLat: customerLat,
-        customerLon: customerLon,
-        customerAddressLabel: complement.isNotEmpty ? complement : null,
-        customerAddressStreet: "$street, $number"
-      );
-      
+                customerLat: customerLat,
+                customerLon: customerLon,
+                customerAddressLabel: complement.isNotEmpty ? complement : null,
+                customerAddressStreet: "$street, $number"
+              );
+
       if (mounted) {
         Navigator.of(context).pop();
       }
-
     } catch (e) {
       print("Erro no _onSave (geocoding ou viewmodel): $e, ${e.toString()}");
+      _showMsg('"Erro no _onSave (geocoding ou viewmodel): $e', Colors.redAccent);
     }
   }
+
+  void _showMsg(String msg, Color color) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(super.context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: color),
+    );
+  }
+
+  Future<Map<String, String>?> _getAddressFromCoordinates(double lat, double lon) async {
+    try {
+      final url = Uri.parse(
+          'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon');
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final address = data['address'];
+        
+        print(address['road']);
+
+        return {
+          'road': address['road'] ?? '',
+          'house_number': address['house_number'] ?? '',
+          'suburb': address['suburb'] ?? address['neighbourhood'] ?? '',
+        };
+      }
+    } catch (e) {
+      print("Erro no Reverse Geocoding HTTP: $e");
+    }
+    return null;
+  }
+
+  Future<void> _openMap() async {
+    const double startLat = -23.550520;
+    const double startLon = -46.633308;
+
+    final LatLng? result = await showDialog<LatLng>(
+      context: context,
+      builder: (context) => const MapPickerDialog(
+        initialLat: startLat,
+        initialLon: startLon,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        _manualLat = result.latitude;
+        _manualLon = result.longitude;
+      });
+
+      _showMsg("Buscando endereço...", Colors.blue);
+      final addressData = await _getAddressFromCoordinates(result.latitude, result.longitude);
+      
+      if (addressData != null) {
+        setState(() {
+          if (addressData['road']!.isNotEmpty) _locationController.text = addressData['road']!;
+          if (addressData['house_number']!.isNotEmpty) _numberController.text = addressData['house_number']!;
+          if (addressData['suburb']!.isNotEmpty) _complementController.text = addressData['suburb']!;
+        });
+        _showMsg("Endereço preenchido!", Colors.green);
+
+
+      } else {
+        _showMsg("Coordenadas salvas! Preencha o endereço.", Colors.green);
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +187,7 @@ class _OrderFormModalState extends State<OrderFormModal> {
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: _openMap,
                     child: Text(
                       'Usar mapa →',
                       style: TextStyle(color: AppColors.surface, fontSize: 13),
