@@ -1,4 +1,5 @@
 import 'package:delivery_dev_seller/modules/dashboard/data/models/delivery_dto.dart';
+import 'package:delivery_dev_seller/modules/dashboard/data/models/restaurant_dto.dart';
 import 'package:delivery_dev_seller/modules/dashboard/data/repositories/delivery_repository.dart';
 import 'package:delivery_dev_seller/modules/dashboard/data/repositories/users_repository.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +18,17 @@ class SolitationsViewmodel extends ChangeNotifier {
   });
 
   Future<void> createSolitation({
-      required double customerLat, 
-      required double customerLon,
-      required String customerAddressLabel, 
-      required String customerAddressStreet
+      required double? customerLat, 
+      required double? customerLon,
+      required String? customerAddressLabel, 
+      required String? customerAddressStreet
     }) async {
     try {
       createSolitationError = null;
       _isLoadingModal = true;
+      notifyListeners();
 
-      usersRepository.fetchUser();
+      await usersRepository.fetchUser();
 
       String? restaurantId = usersRepository.idRestaurant;
 
@@ -34,14 +36,20 @@ class SolitationsViewmodel extends ChangeNotifier {
         throw Exception('Erro ao buscar restaurante');
       }
 
-      final deliveryRepository.getRestaurant(idRestaurant: restaurantId);
+      final RestaurantDto? restaurant = await deliveryRepository.getRestaurant(idRestaurant: restaurantId);
+
+      if (restaurant == null) {
+        throw Exception('Erro ao buscar cidade, dados vazios');
+      }
+
+
 
       final solitation = DeliveryDto(
-        restaurantName: restaurantName, 
-        restaurantLon: restaurantLon, 
-        restaurantLat: restaurantLat,
-        restaurantAddressLabel: restaurantAddressLabel, 
-        restaurantAddressStreet: restaurantAddressStreet, 
+        restaurantName: restaurant.restaurantName,
+        restaurantLon: restaurant.lon,
+        restaurantLat: restaurant.lat,
+        restaurantAddressLabel: restaurant.adressLabel,
+        restaurantAddressStreet: restaurant.adressStreet,
         customerAddressLabel: customerAddressLabel, 
         customerAddressStreet: customerAddressStreet, 
         customerLat: customerLat, 
@@ -49,9 +57,15 @@ class SolitationsViewmodel extends ChangeNotifier {
         price: 10.50, 
         status: 'pending'
       );
+
+      deliveryRepository.createSolitation(delivery: solitation);
+
     } catch (e) {
       print('erro ao criar solicitação: ' + e.toString());
       createSolitationError = e.toString();
+    } finally {
+      _isLoadingModal = false;
+      notifyListeners();
     }
   }
 }

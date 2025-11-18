@@ -1,15 +1,23 @@
 import 'package:delivery_dev_seller/modules/dashboard/data/repositories/delivery_repository.dart';
+import 'package:delivery_dev_seller/modules/dashboard/data/repositories/users_repository.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/dashboard_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/drivers_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/solitations_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/dashboard_viewmodel.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/solitations_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class DashboardModule extends Module {
   @override
   void binds(Injector i) {
     i.addSingleton(() => DeliveryRepository());
+    i.addSingleton(() => UsersRepository());
+
     i.addSingleton(() => DashboardViewmodel(i.get<DeliveryRepository>()));
+    i.addSingleton(() => SolitationsViewmodel(
+      deliveryRepository: i.get<DeliveryRepository>(),
+      usersRepository: i.get<UsersRepository>()
+      ));
 
     super.binds(i);
   }
