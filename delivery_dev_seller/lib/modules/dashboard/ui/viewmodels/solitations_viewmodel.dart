@@ -42,7 +42,9 @@ class SolitationsViewmodel extends ChangeNotifier {
         throw Exception('Erro ao buscar cidade, dados vazios');
       }
 
+      if ([customerLat, customerLon].every((value) => value == null)) {
 
+      }
 
       final solitation = DeliveryDto(
         restaurantName: restaurant.restaurantName,
@@ -50,10 +52,13 @@ class SolitationsViewmodel extends ChangeNotifier {
         restaurantLat: restaurant.lat,
         restaurantAddressLabel: restaurant.adressLabel,
         restaurantAddressStreet: restaurant.adressStreet,
-        customerAddressLabel: customerAddressLabel, 
-        customerAddressStreet: customerAddressStreet, 
-        customerLat: customerLat, 
-        customerLon: customerLon, 
+        customerAddressLabel: customerAddressLabel!, 
+        customerAddressStreet: customerAddressStreet!, 
+        customerLat: customerLat!, 
+        customerLon: customerLon!, 
+        idUser: '',
+        conclusionDate: '',
+        distanceKm: 0,
         price: 10.50, 
         status: 'pending'
       );

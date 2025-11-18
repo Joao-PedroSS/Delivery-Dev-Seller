@@ -1,3 +1,4 @@
+import 'package:delivery_dev_seller/modules/dashboard/data/services/geocoding_service.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/solitations_viewmodel.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -45,17 +46,12 @@ class _OrderFormModalState extends State<OrderFormModal> {
       final number = _numberController.text;
       final complement = _complementController.text;
       
-      final String fullAddress = "$street, $number, Brasil";
+      final String fullAddress = "$street, $number, Santa Cruz do Sul - RS";
 
-      List<geocoding.Location> locations = await geocoding.locationFromAddress(fullAddress);
-      
-      if (locations.isEmpty) {
-        throw Exception("Endereço não encontrado. Verifique os dados.");
-      }
+      final locationData = await GeocodingService().getCoordinatesFromAddress(fullAddress);
 
-      final geocoding.Location locationData = locations.first;
-      final double customerLat = locationData.latitude;
-      final double customerLon = locationData.longitude;
+      final double customerLat = locationData!.lat;
+      final double customerLon = locationData.lon;
 
       await _viewmodel.createSolitation(
         customerLat: customerLat,
@@ -69,7 +65,7 @@ class _OrderFormModalState extends State<OrderFormModal> {
       }
 
     } catch (e) {
-      print("Erro no _onSave (geocoding ou viewmodel): $e");
+      print("Erro no _onSave (geocoding ou viewmodel): $e, ${e.toString()}");
     }
   }
 

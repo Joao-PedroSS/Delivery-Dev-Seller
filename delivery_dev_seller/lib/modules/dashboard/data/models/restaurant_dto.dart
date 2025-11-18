@@ -1,5 +1,5 @@
 class RestaurantDto {
-  final String id;
+  final String? id;
   final String adressLabel;
   final String adressStreet;
   final String restaurantName;
@@ -7,7 +7,7 @@ class RestaurantDto {
   final double lon;
 
   RestaurantDto({
-    required this.id,
+    this.id,
     required this.adressLabel,
     required this.adressStreet,
     required this.restaurantName,

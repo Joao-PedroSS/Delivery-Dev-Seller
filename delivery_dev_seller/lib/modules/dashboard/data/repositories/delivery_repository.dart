@@ -31,7 +31,7 @@ class DeliveryRepository {
     try {
       final query = _ordersCollection;
 
-      query.add(delivery);
+      query.add(delivery.toMap());
 
     } catch (e) {
       print('Erro ao criar nova solicitação: ' + e.toString());
@@ -49,7 +49,7 @@ class DeliveryRepository {
         throw Exception('Erro: Restaurante não encontrado');
       }
 
-      final dataMap = restaurantData as Map<String, dynamic>;
+      final dataMap = restaurantData.data() as Map<String, dynamic>;
       final RestaurantDto restaurant = RestaurantDto.fromMap(dataMap);
 
       return restaurant;

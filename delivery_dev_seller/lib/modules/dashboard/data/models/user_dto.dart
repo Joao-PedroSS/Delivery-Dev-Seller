@@ -1,5 +1,5 @@
 class UserDto {
-  final String id;
+  final String? id;
   final String restaurantId;
   final String userRole;
   final bool online;
@@ -7,7 +7,7 @@ class UserDto {
   final double lon;
 
   UserDto({
-    required this.id,
+    this.id,
     required this.restaurantId,
     required this.userRole,
     required this.online,

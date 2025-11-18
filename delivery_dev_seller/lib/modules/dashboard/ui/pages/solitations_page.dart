@@ -1,3 +1,4 @@
+import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/new_solitation_modal.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/sidebar.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
 import 'package:delivery_dev_seller/theme/app_theme.dart';
@@ -11,6 +12,16 @@ class SolitationsPage extends StatefulWidget {
 }
 
 class _SolitationsState extends State<SolitationsPage> {
+  void _openNewOrderModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return const OrderFormModal();
+      },
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,32 +29,25 @@ class _SolitationsState extends State<SolitationsPage> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      home: _SolitationsScreen(),
-    );
-  }
-}
-
-class _SolitationsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          const Sidebar(currentPage: AppPages.requests),
-          Expanded(
-            child: _MainContent(),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.surface,
-        shape: const CircleBorder(
-          side: BorderSide(color: AppColors.borderColor, width: 2),
+      home:  Scaffold(
+        body: Row(
+          children: [
+            const Sidebar(currentPage: AppPages.requests),
+            Expanded(
+              child: _MainContent(),
+            ),
+          ],
         ),
-        child: const Icon(Icons.add, size: 32),
-      ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _openNewOrderModal,
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.surface,
+          shape: const CircleBorder(
+            side: BorderSide(color: AppColors.borderColor, width: 2),
+          ),
+          child: const Icon(Icons.add, size: 32),
+        ),
+      )
     );
   }
 }

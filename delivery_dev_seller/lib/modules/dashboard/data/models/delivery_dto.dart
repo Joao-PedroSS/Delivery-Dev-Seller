@@ -78,6 +78,9 @@ class DeliveryDto {
       "customer_lat": customerLat,
       "customer_lon": customerLon,
 
+      "status": status,
+      if (conclusionDate != null) "conclusion_date" : conclusionDate,
+
       if (distanceKm != null) "distance_km": distanceKm,
       "price": price,
     };
