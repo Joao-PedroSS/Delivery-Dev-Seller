@@ -90,7 +90,7 @@ class _OrderFormModalState extends State<OrderFormModal> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Ocupa o mínimo de espaço vertical
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Align(
                   alignment: Alignment.topRight,
@@ -130,7 +130,7 @@ class _OrderFormModalState extends State<OrderFormModal> {
                   controller: _complementController,
                   labelText: 'Complemento',
                   hintText: 'ex: apto. 2',
-                  isRequired: false, // Não é obrigatório
+                  isRequired: false,
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
@@ -138,7 +138,7 @@ class _OrderFormModalState extends State<OrderFormModal> {
                   child: ElevatedButton(
                     onPressed: _viewmodel.isLoadingModal ? () {} : _onSave,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.surface, // Cor do botão Salvar
+                      backgroundColor: AppColors.surface,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -157,7 +157,6 @@ class _OrderFormModalState extends State<OrderFormModal> {
   }
 }
 
-// Widget auxiliar para os campos de texto do modal
 class _ModalTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
@@ -190,7 +189,7 @@ class _ModalTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: AppColors.text.withOpacity(0.6)),
-            fillColor: AppColors.secundary, // Fundo do campo de texto
+            fillColor: AppColors.secundary,
             filled: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
