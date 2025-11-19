@@ -4,6 +4,7 @@ import 'package:delivery_dev_seller/modules/dashboard/ui/pages/dashboard_page.da
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/drivers_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/pages/solitations_page.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/dashboard_viewmodel.dart';
+import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/drivers_viewmodel.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/solitations_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -13,11 +14,12 @@ class DashboardModule extends Module {
     i.addSingleton(() => DeliveryRepository());
     i.addSingleton(() => UsersRepository());
 
-    i.addSingleton(() => DashboardViewmodel(i.get<DeliveryRepository>()));
+    i.addLazySingleton(() => DashboardViewmodel(i.get<DeliveryRepository>(), i.get<UsersRepository>()));
     i.addSingleton(() => SolitationsViewmodel(
-      deliveryRepository: i.get<DeliveryRepository>(),
-      usersRepository: i.get<UsersRepository>()
+      i.get<DeliveryRepository>(),  
+      i.get<UsersRepository>()
       ));
+    i.addSingleton(() => DriversViewmodel(usersRepository: i.get<UsersRepository>()));
 
     super.binds(i);
   }

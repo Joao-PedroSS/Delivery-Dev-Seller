@@ -1,7 +1,9 @@
+import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/drivers_viewmodel.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/widgets/sidebar.dart';
 import 'package:delivery_dev_seller/theme/app_colors.dart';
 import 'package:delivery_dev_seller/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class _Driver {
   final String nome;
@@ -112,59 +114,75 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildTable(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: DataTable(
-        headingRowHeight: 50,
-        dataRowMaxHeight: 50,
-        dataRowMinHeight: 50,
-        horizontalMargin: 16,
-        columnSpacing: 20,
-        headingTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: AppColors.text,
+  final viewModel = Modular.get<DriversViewmodel>();
+  
+  viewModel.fetchDrivers();
+
+  return AnimatedBuilder(
+    animation: viewModel,
+    builder: (context, _) {
+      if (viewModel.isLoadingDrivers) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(40),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      if (viewModel.drivers == null || viewModel.drivers!.isEmpty) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(40),
+            child: Text("Nenhum entregador encontrado."),
+          ),
+        );
+      }
+
+      final drivers = viewModel.drivers!;
+
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        columns: const [
-          DataColumn(label: Text('Nome')),
-          DataColumn(label: Text('Localização')),
-          DataColumn(label: Text('Status')),
-        ],
-        rows: _mockDrivers.map((driver) {
-          return _buildDataRow(context, driver);
-        }).toList(),
-      ),
-    );
-  }
-
-  DataRow _buildDataRow(BuildContext context, _Driver driver) {
-    final bool isOff = driver.status == 'OFF';
-    
-    final style = isOff
-        ? Theme.of(context).textTheme.bodyMedium
-        : Theme.of(context).textTheme.bodyLarge?.copyWith(
-            fontSize: 13, 
-            fontWeight: FontWeight.normal
-          );
-
-    return DataRow(
-      cells: [
-        DataCell(Text(driver.nome, style: style)),
-        DataCell(Text(driver.localizacao, style: style)),
-        DataCell(Text(driver.status, style: style)),
-      ],
-    );
-  }
+        child: DataTable(
+          headingRowHeight: 50,
+          dataRowMaxHeight: 50,
+          dataRowMinHeight: 50,
+          horizontalMargin: 16,
+          columnSpacing: 20,
+          headingTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: AppColors.text,
+          ),
+          columns: const [
+            DataColumn(label: Text('Nome')),
+            DataColumn(label: Text('Localização')),
+            DataColumn(label: Text('Status')),
+          ],
+          rows: drivers.map((driver) { 
+            return DataRow(
+              cells: [
+                DataCell(Text(driver.name)),
+                DataCell(Text(driver.location)),
+                DataCell(Text(driver.status)),
+              ],
+            );
+          }).toList(),
+        ),
+      );
+    },
+  );
+}
 
   Widget _buildPagination(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _PageButton(text: '1', isActive: true),
+        _PageButton(text: '1 ', isActive: true),
         _PageButton(text: '2'),
         _PageButton(text: '3'),
         _PageButton(text: '4'),

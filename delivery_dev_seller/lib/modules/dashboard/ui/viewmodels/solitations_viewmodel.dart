@@ -1,5 +1,5 @@
-import 'package:delivery_dev_seller/modules/dashboard/data/models/delivery_dto.dart';
-import 'package:delivery_dev_seller/modules/dashboard/data/models/restaurant_dto.dart';
+import 'package:delivery_dev_seller/modules/dashboard/data/dtos/delivery_dto.dart';
+import 'package:delivery_dev_seller/modules/dashboard/data/dtos/restaurant_dto.dart';
 import 'package:delivery_dev_seller/modules/dashboard/data/repositories/delivery_repository.dart';
 import 'package:delivery_dev_seller/modules/dashboard/data/repositories/users_repository.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +12,20 @@ class SolitationsViewmodel extends ChangeNotifier {
   final UsersRepository usersRepository;
   final DeliveryRepository deliveryRepository;
 
-  SolitationsViewmodel({
-    required this.deliveryRepository,
-    required this.usersRepository
-  });
+  int? countDriversOnline;
+  int? countRestaurantSolitations;
+
+  SolitationsViewmodel(
+    this.deliveryRepository,
+    this.usersRepository
+  );
+
+  Stream<List<DeliveryDto>> get ordersStream => deliveryRepository.getOrdersStream();
 
   Future<void> createSolitation({
-      required double? customerLat, 
+      required double? customerLat,
       required double? customerLon,
-      required String? customerAddressLabel, 
+      required String? customerAddressLabel,
       required String? customerAddressStreet
     }) async {
     try {
@@ -42,20 +47,17 @@ class SolitationsViewmodel extends ChangeNotifier {
         throw Exception('Erro ao buscar cidade, dados vazios');
       }
 
-      if ([customerLat, customerLon].every((value) => value == null)) {
-
-      }
-
       final solitation = DeliveryDto(
+        restaurantId: restaurantId,
         restaurantName: restaurant.restaurantName,
         restaurantLon: restaurant.lon,
         restaurantLat: restaurant.lat,
         restaurantAddressLabel: restaurant.adressLabel,
         restaurantAddressStreet: restaurant.adressStreet,
-        customerAddressLabel: customerAddressLabel!, 
-        customerAddressStreet: customerAddressStreet!, 
-        customerLat: customerLat!, 
-        customerLon: customerLon!, 
+        customerAddressLabel: customerAddressLabel!,
+        customerAddressStreet: customerAddressStreet!,
+        customerLat: customerLat!,
+        customerLon: customerLon!,
         idUser: '',
         conclusionDate: '',
         distanceKm: 0,

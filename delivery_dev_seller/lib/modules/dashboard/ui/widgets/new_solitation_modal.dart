@@ -77,13 +77,13 @@ class _OrderFormModalState extends State<OrderFormModal> {
 
         street = addressMap!['road']!;
         number = addressMap['house_number']!;
-        complement = addressMap['suburb']!;
+        complement = addressMap['suburb'] ?? '';
       }
 
       await _viewmodel.createSolitation(
-                customerLat: customerLat,
+                customerLat: customerLat, 
                 customerLon: customerLon,
-                customerAddressLabel: complement.isNotEmpty ? complement : null,
+                customerAddressLabel: complement.isNotEmpty ? complement : 'Sem complemento',
                 customerAddressStreet: "$street, $number"
               );
 
@@ -122,7 +122,7 @@ class _OrderFormModalState extends State<OrderFormModal> {
           'suburb': address['suburb'] ?? address['neighbourhood'] ?? '',
         };
       }
-    } catch (e) {
+    } catch (e) { 
       print("Erro no Reverse Geocoding HTTP: $e");
     }
     return null;

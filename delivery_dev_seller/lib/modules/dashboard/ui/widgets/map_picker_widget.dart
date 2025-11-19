@@ -9,7 +9,7 @@ class MapPickerDialog extends StatefulWidget {
 
   const MapPickerDialog({
     super.key,
-    this.initialLat = -23.55052, // Padrão: São Paulo (exemplo)
+    this.initialLat = -23.55052,
     this.initialLon = -46.633308,
   });
 

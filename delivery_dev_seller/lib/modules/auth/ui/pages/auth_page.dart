@@ -104,9 +104,9 @@ class _AuthPageState extends State<AuthPage> {
       keyboardType: TextInputType.emailAddress,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
-        labelText: 'E-mail', //
+        labelText: 'E-mail', 
         labelStyle: TextStyle(color: AppColors.text),
-        hintText: 'ex: joao@email.com', //
+        hintText: 'ex: joao@email.com', 
         hintStyle: TextStyle(color: AppColors.text),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -192,8 +192,8 @@ class _AuthPageState extends State<AuthPage> {
       height: 50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.surface, // Fundo claro
-          foregroundColor: Colors.black, // Texto escuro
+          backgroundColor: AppColors.surface,
+          foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
           ),
