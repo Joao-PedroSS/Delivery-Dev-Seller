@@ -67,6 +67,7 @@ class UsersRepository {
       return count.count;
     } catch (e) {
       print('Erro ao contar usuarios logados: $e');
+      return null;
     }
   }
 }

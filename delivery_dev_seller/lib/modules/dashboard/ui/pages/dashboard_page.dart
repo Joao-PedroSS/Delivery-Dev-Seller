@@ -89,8 +89,6 @@ class _MainContent extends StatelessWidget {
   Widget _buildStatsCards() {
     final DashboardViewmodel viewModel = Modular.get<DashboardViewmodel>();
 
-    viewModel.initViewmodel();
-
     return AnimatedBuilder(
       animation: viewModel, 
       builder: (context, _) { 
@@ -100,7 +98,7 @@ class _MainContent extends StatelessWidget {
               width: 253,
               child: _StatCard(
                 title: 'Entregadores online',
-                count: viewModel.countDriversOnline.toString(),
+                count: viewModel.countDriversOnline ?? 0,
                 icon: Icons.open_in_new,
                 route: '/dashboard/drivers'
               ),
@@ -110,7 +108,7 @@ class _MainContent extends StatelessWidget {
               width: 253,
               child: _StatCard(
                 title: 'Meus pedidos',
-                count: viewModel.countRestaurantSolitations.toString(),
+                count: viewModel.countRestaurantSolitations ?? 0,
                 icon: Icons.open_in_new,
                 route: '/dashboard/solitations'
               ),
@@ -148,11 +146,37 @@ class _MainContent extends StatelessWidget {
             builder: (context, _) {
               final orders = viewModel.deliveries;
 
-              if (orders.isEmpty) {
+              if (viewModel.isLoadingOrders) {
                 return const Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 40),
                     child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              if (viewModel.ordersError != null) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: Text(
+                      'Erro ao carregar pedidos em andamento.',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              if (orders.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: Text(
+                      'Nenhum pedido em andamento no momento.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
                 );
               }
@@ -177,7 +201,7 @@ class _MainContent extends StatelessWidget {
 
 class _StatCard extends StatelessWidget {
   final String title;
-  final String count;
+  final int count;
   final IconData? icon;
   final String route;
 
@@ -224,7 +248,7 @@ class _StatCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            count,
+            count.toString(),
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.right,
           ),
@@ -282,7 +306,7 @@ class _OrderCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${distance} para o entregador chegar.',
+            '$distance para o entregador chegar.',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 4),

@@ -103,11 +103,11 @@ class DeliveryRepository {
     });
   }
 
-  void createSolitation({required DeliveryDto delivery}) {
+  Future<void> createSolitation({required DeliveryDto delivery}) async {
     try {
       final query = _ordersCollection;
 
-      query.add(delivery.toMap());
+      await query.add(delivery.toMap());
 
     } catch (e) {
       print('Erro ao criar nova solicitação: ' + e.toString());
