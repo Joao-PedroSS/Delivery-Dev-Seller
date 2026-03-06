@@ -18,7 +18,7 @@ class AppModule extends Module {
 
     r.redirect('/', to: '/auth/');
 
-    r.module('/auth', module: AuthModule(), guards: [AuthGuard()]);
+    r.module('/auth', module: AuthModule());
     r.module('/dashboard', module: DashboardModule(), guards: [AuthGuard()]);
   }
 }
