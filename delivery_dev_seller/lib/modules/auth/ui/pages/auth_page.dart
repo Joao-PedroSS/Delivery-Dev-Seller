@@ -19,6 +19,7 @@ class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _isPasswordVisible = false;
+  bool _rememberMe = true;
 
   @override
   void dispose() {
@@ -33,10 +34,13 @@ class _AuthPageState extends State<AuthPage> {
         await _viewModel.login(
           _emailController.text,
           _passwordController.text,
+          rememberMe: _rememberMe,
         );
 
+        if (!mounted) return;
         Modular.to.navigate('/dashboard/');
       } catch (e) {
+        if (!mounted) return;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -85,6 +89,8 @@ class _AuthPageState extends State<AuthPage> {
                         const SizedBox(height: 40),
 
                         _buildLoginButton(),
+                        const SizedBox(height: 12),
+                        _buildRememberMeCheckbox(),
                       ],
                     ),
                   ),
@@ -209,6 +215,34 @@ class _AuthPageState extends State<AuthPage> {
                 'Entrar',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+      ),
+    );
+  }
+
+  Widget _buildRememberMeCheckbox() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Checkbox(
+            value: _rememberMe,
+            onChanged: _viewModel.isLoading
+                ? null
+                : (value) {
+                    setState(() {
+                      _rememberMe = value ?? false;
+                    });
+                  },
+            activeColor: AppColors.surface,
+            checkColor: Colors.black,
+          ),
+          const SizedBox(width: 6),
+          const Text(
+            'Lembre-se de mim',
+            style: TextStyle(color: AppColors.text),
+          ),
+        ],
       ),
     );
   }

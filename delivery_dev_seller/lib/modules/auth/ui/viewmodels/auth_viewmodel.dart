@@ -11,12 +11,20 @@ class AuthViewmodel extends ChangeNotifier{
   bool get isLoading => _isLoading;
 
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(
+    String email,
+    String password, {
+    required bool rememberMe,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      await _repository.login(email, password);
+      await _repository.login(
+        email,
+        password,
+        rememberMe: rememberMe,
+      );
       
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
