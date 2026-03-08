@@ -33,6 +33,17 @@ class DashboardViewmodel extends ChangeNotifier {
       },
     );
 
+    _deliveryRepository.getRestaurantSolitationsCountStream().listen(
+      (count) {
+        countRestaurantSolitations = count;
+        notifyListeners();
+      },
+      onError: (Object e, StackTrace s) {
+        debugPrint('[Dashboard] count stream error: $e');
+        debugPrintStack(stackTrace: s);
+      },
+    );
+
     initViewmodel();
   }
 
@@ -51,11 +62,7 @@ class DashboardViewmodel extends ChangeNotifier {
         throw Exception('Erro ao buscar restaurante');
       }
 
-      final countR = await _deliveryRepository.getRestaurantSolitationsCount(
-        restaurantId: restaurantId,
-      );
-
-      countRestaurantSolitations = countR ?? 0;
+      countRestaurantSolitations ??= 0;
       initError = null;
 
       debugPrint("[Initialization]: Dashboard viewmodel initialized");

@@ -50,11 +50,18 @@ class _OrderFormModalState extends State<OrderFormModal> {
       if ([_manualLat, _manualLon].every((value) => value == null)) {
         address = _locationController.text.trim();
 
-        final fullAddress = '$address, Santa Cruz do Sul - RS';
+        final fullAddress = '$address, Santa Cruz do Sul - RS, Brasil';
         final locationData =
             await GeocodingService().getCoordinatesFromAddress(fullAddress);
+        if (locationData == null) {
+          _showMsg(
+            'Endereco nao encontrado. Tente um endereco mais completo ou use o mapa.',
+            Colors.orangeAccent,
+          );
+          return;
+        }
 
-        customerLat = locationData!.lat;
+        customerLat = locationData.lat;
         customerLon = locationData.lon;
       } else {
         customerLat = _manualLat!;

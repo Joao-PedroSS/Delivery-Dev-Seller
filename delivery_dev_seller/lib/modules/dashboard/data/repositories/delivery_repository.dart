@@ -114,6 +114,22 @@ class DeliveryRepository {
     });
   }
 
+  Stream<int> getRestaurantSolitationsCountStream() async* {
+    final myRestaurantId = await _getMyRestaurantId();
+
+    if (myRestaurantId == null) {
+      yield 0;
+      return;
+    }
+
+    final query = _ordersCollection.where(
+      'restaurant_id',
+      isEqualTo: myRestaurantId,
+    );
+
+    yield* query.snapshots().map((snapshot) => snapshot.docs.length);
+  }
+
   Future<void> createSolitation({required DeliveryDto delivery}) async {
     try {
       final query = _ordersCollection;

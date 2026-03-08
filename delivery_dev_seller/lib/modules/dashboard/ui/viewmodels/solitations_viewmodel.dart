@@ -20,9 +20,9 @@ class SolitationsViewmodel extends ChangeNotifier {
       deliveryRepository.getOrdersStream();
 
   Future<void> createSolitation({
-    required double? customerLat,
-    required double? customerLon,
-    required String? address,
+    required double customerLat,
+    required double customerLon,
+    required String address,
   }) async {
     try {
       createSolitationError = null;
@@ -49,9 +49,9 @@ class SolitationsViewmodel extends ChangeNotifier {
         restaurantLon: restaurant.lon,
         restaurantLat: restaurant.lat,
         restaurantAddress: restaurant.address,
-        customerAddress: address!,
-        customerLat: customerLat!,
-        customerLon: customerLon!,
+        customerAddress: address,
+        customerLat: customerLat,
+        customerLon: customerLon,
         idUser: '',
         conclusionDate: '',
         distanceKm: 0,
