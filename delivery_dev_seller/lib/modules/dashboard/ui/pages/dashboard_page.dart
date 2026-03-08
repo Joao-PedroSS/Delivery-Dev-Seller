@@ -260,10 +260,9 @@ class _StatCard extends StatelessWidget {
 
 _OrderCard _buildOrderCard(DeliveryDto order) {
   return _OrderCard(
-    location: order.customerAddressLabel,
+    location: order.customerAddress,
     status: order.status,
     distance: '10 km',
-    address: order.customerAddressStreet,
     name: 'joao'
   );
 }
@@ -272,7 +271,6 @@ class _OrderCard extends StatelessWidget {
   final String location;
   final String status;
   final String distance;
-  final String address;
   final String name;
 
   const _OrderCard({
@@ -280,7 +278,6 @@ class _OrderCard extends StatelessWidget {
     required this.location,
     required this.status,
     required this.distance,
-    required this.address,
   });
 
   @override
@@ -307,11 +304,6 @@ class _OrderCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             '$distance para o entregador chegar.',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            address,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],

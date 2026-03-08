@@ -161,10 +161,9 @@ _OrderCard _buildOrderCard(DeliveryDto order) {
   }
 
   return _OrderCard(
-    location: order.customerAddressLabel.isNotEmpty ? order.customerAddressLabel : "Local de entrega",
+    location: order.customerAddress.isNotEmpty ? order.customerAddress : "Local de entrega",
     status: statusText,
     distance: distanceText,
-    address: order.customerAddressStreet,
     isPending: isPending,
   );
 }
@@ -173,14 +172,12 @@ class _OrderCard extends StatelessWidget {
   final String location;
   final String status;
   final String distance;
-  final String address;
   final bool isPending;
 
   const _OrderCard({
     required this.location,
     required this.status,
     required this.distance,
-    required this.address,
     this.isPending = false,
   });
 
@@ -189,7 +186,7 @@ class _OrderCard extends StatelessWidget {
     final contentOpacity = isPending ? 0.5 : 1.0;
     
     final backgroundColor = isPending 
-        ? Color.alphaBlend(Colors.black.withOpacity(0.3), Theme.of(context).canvasColor)
+        ? Color.alphaBlend(Colors.black.withValues(alpha: 0.3), Theme.of(context).canvasColor)
         : Theme.of(context).canvasColor;
 
     return Container(
@@ -216,11 +213,6 @@ class _OrderCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               distance,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              address,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],

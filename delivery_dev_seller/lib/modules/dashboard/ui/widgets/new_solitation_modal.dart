@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:delivery_dev_seller/modules/dashboard/data/services/geocoding_service.dart';
 import 'package:delivery_dev_seller/modules/dashboard/ui/viewmodels/solitations_viewmodel.dart';
@@ -10,7 +10,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 
 class OrderFormModal extends StatefulWidget {
-
   const OrderFormModal({super.key});
 
   @override
@@ -20,8 +19,6 @@ class OrderFormModal extends StatefulWidget {
 class _OrderFormModalState extends State<OrderFormModal> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _locationController;
-  late TextEditingController _numberController;
-  late TextEditingController _complementController;
 
   final _viewmodel = Modular.get<SolitationsViewmodel>();
 
@@ -32,15 +29,11 @@ class _OrderFormModalState extends State<OrderFormModal> {
   void initState() {
     super.initState();
     _locationController = TextEditingController();
-    _numberController = TextEditingController();
-    _complementController = TextEditingController();
   }
 
   @override
   void dispose() {
     _locationController.dispose();
-    _numberController.dispose();
-    _complementController.dispose();
     super.dispose();
   }
 
@@ -52,85 +45,80 @@ class _OrderFormModalState extends State<OrderFormModal> {
     try {
       final double customerLat;
       final double customerLon;
-
-      final String street;
-      final String number;
-      final String complement;
+      final String address;
 
       if ([_manualLat, _manualLon].every((value) => value == null)) {
-        street = _locationController.text;
-        number = _numberController.text;
-        complement = _complementController.text;
+        address = _locationController.text.trim();
 
-        final String fullAddress = "$street, $number, Santa Cruz do Sul - RS";
-
-        final locationData = await GeocodingService().getCoordinatesFromAddress(fullAddress);
+        final fullAddress = '$address, Santa Cruz do Sul - RS';
+        final locationData =
+            await GeocodingService().getCoordinatesFromAddress(fullAddress);
 
         customerLat = locationData!.lat;
         customerLon = locationData.lon;
-
       } else {
         customerLat = _manualLat!;
         customerLon = _manualLon!;
 
-        final addressMap = await _getAddressFromCoordinates(customerLat, customerLon);
-
-        street = addressMap!['road']!;
-        number = addressMap['house_number']!;
-        complement = addressMap['suburb'] ?? '';
+        final reverseAddress =
+            await _getAddressFromCoordinates(customerLat, customerLon);
+        address = reverseAddress ?? _locationController.text.trim();
       }
 
       await _viewmodel.createSolitation(
-                customerLat: customerLat, 
-                customerLon: customerLon,
-                customerAddressLabel: complement.isNotEmpty ? complement : 'Sem complemento',
-                customerAddressStreet: "$street, $number"
-              );
+        customerLat: customerLat,
+        customerLon: customerLon,
+        address: address.isNotEmpty ? address : 'Local nao informado',
+      );
 
       if (mounted) {
         Navigator.of(context).pop();
       }
     } catch (e) {
-      print("Erro no _onSave (geocoding ou viewmodel): $e, ${e.toString()}");
-      _showMsg('"Erro no _onSave (geocoding ou viewmodel): $e', Colors.redAccent);
+      _showMsg('Erro ao salvar solicitacao: $e', Colors.redAccent);
     }
   }
 
   void _showMsg(String msg, Color color) {
     if (!mounted) return;
-    ScaffoldMessenger.of(super.context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(msg), backgroundColor: color),
     );
   }
 
-  Future<Map<String, String>?> _getAddressFromCoordinates(double lat, double lon) async {
+  Future<String?> _getAddressFromCoordinates(double lat, double lon) async {
     try {
       final url = Uri.parse(
-          'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon');
+        'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon',
+      );
 
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final address = data['address'];
-        
-        print(address['road']);
 
-        return {
-          'road': address['road'] ?? '',
-          'house_number': address['house_number'] ?? '',
-          'suburb': address['suburb'] ?? address['neighbourhood'] ?? '',
-        };
+        final road = address['road'] ?? '';
+        final houseNumber = address['house_number'] ?? '';
+        final suburb = address['suburb'] ?? address['neighbourhood'] ?? '';
+
+        final parts = [road, houseNumber, suburb]
+            .where((part) => part.toString().trim().isNotEmpty)
+            .map((part) => part.toString().trim())
+            .toList();
+
+        if (parts.isEmpty) return null;
+        return parts.join(', ');
       }
-    } catch (e) { 
-      print("Erro no Reverse Geocoding HTTP: $e");
+    } catch (_) {
+      return null;
     }
     return null;
   }
 
   Future<void> _openMap() async {
-    const double startLat = -23.550520;
-    const double startLon = -46.633308;
+    const startLat = -23.550520;
+    const startLon = -46.633308;
 
     final LatLng? result = await showDialog<LatLng>(
       context: context,
@@ -146,24 +134,20 @@ class _OrderFormModalState extends State<OrderFormModal> {
         _manualLon = result.longitude;
       });
 
-      _showMsg("Buscando endereço...", Colors.blue);
-      final addressData = await _getAddressFromCoordinates(result.latitude, result.longitude);
-      
-      if (addressData != null) {
+      _showMsg('Buscando endereco...', Colors.blue);
+      final addressLabel =
+          await _getAddressFromCoordinates(result.latitude, result.longitude);
+
+      if (addressLabel != null) {
         setState(() {
-          if (addressData['road']!.isNotEmpty) _locationController.text = addressData['road']!;
-          if (addressData['house_number']!.isNotEmpty) _numberController.text = addressData['house_number']!;
-          if (addressData['suburb']!.isNotEmpty) _complementController.text = addressData['suburb']!;
+          _locationController.text = addressLabel;
         });
-        _showMsg("Endereço preenchido!", Colors.green);
-
-
+        _showMsg('Endereco preenchido!', Colors.green);
       } else {
-        _showMsg("Coordenadas salvas! Preencha o endereço.", Colors.green);
+        _showMsg('Coordenadas salvas! Preencha o endereco.', Colors.green);
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -188,8 +172,8 @@ class _OrderFormModalState extends State<OrderFormModal> {
                   alignment: Alignment.topRight,
                   child: TextButton(
                     onPressed: _openMap,
-                    child: Text(
-                      'Usar mapa →',
+                    child: const Text(
+                      'Usar mapa ->',
                       style: TextStyle(color: AppColors.surface, fontSize: 13),
                     ),
                   ),
@@ -197,32 +181,13 @@ class _OrderFormModalState extends State<OrderFormModal> {
                 _ModalTextField(
                   controller: _locationController,
                   labelText: 'Local de entrega*',
-                  hintText: 'ex: Rua Prudente',
+                  hintText: 'ex: Rua Prudente, 518, Centro',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira o local de entrega';
                     }
                     return null;
                   },
-                ),
-                const SizedBox(height: 16),
-                _ModalTextField(
-                  controller: _numberController,
-                  labelText: 'Número*',
-                  hintText: 'ex: 518',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o número';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                _ModalTextField(
-                  controller: _complementController,
-                  labelText: 'Complemento',
-                  hintText: 'ex: apto. 2',
-                  isRequired: false,
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
@@ -254,14 +219,12 @@ class _ModalTextField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final String? Function(String?)? validator;
-  final bool isRequired;
 
   const _ModalTextField({
     required this.controller,
     required this.labelText,
     required this.hintText,
     this.validator,
-    this.isRequired = true,
   });
 
   @override
@@ -271,23 +234,26 @@ class _ModalTextField extends StatelessWidget {
       children: [
         Text(
           labelText,
-          style: TextStyle(color: AppColors.text, fontSize: 14),
+          style: const TextStyle(color: AppColors.text, fontSize: 14),
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
-          validator: isRequired ? validator : null,
+          validator: validator,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(color: AppColors.text.withOpacity(0.6)),
+            hintStyle: TextStyle(color: AppColors.text.withValues(alpha: 0.6)),
             fillColor: AppColors.secundary,
             filled: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide.none,
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
           ),
         ),
       ],
